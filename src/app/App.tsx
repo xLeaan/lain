@@ -277,6 +277,7 @@ function App() {
     }
     if (mostRecentAssistantMessage.status === "DONE") {
       console.log("No truncation needed, message is DONE");
+      console.log("conversación IA:", mostRecentAssistantMessage);
       return;
     }
 
