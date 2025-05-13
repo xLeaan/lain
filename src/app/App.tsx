@@ -266,6 +266,16 @@ function App() {
     }
   };
 
+  const WebSocket = require('ws');
+  const ws = new WebSocket('ws://localhost:8888');
+
+    // Conectar el WebSocket
+    ws.on('open', () => {
+      console.log('Conexión WebSocket abierta');
+    });
+
+  
+
   const cancelAssistantSpeech = async () => {
     const mostRecentAssistantMessage = [...transcriptItems]
       .reverse()
@@ -276,8 +286,8 @@ function App() {
       return;
     }
     if (mostRecentAssistantMessage.status === "DONE") {
-      console.log("No truncation needed, message is DONE");
-      console.log("conversación IA:", mostRecentAssistantMessage);
+      // console.log("No truncation needed, message is DONE");
+      console.log("conversación IA:", mostRecentAssistantMessage.title);
       return;
     }
 
@@ -308,10 +318,37 @@ function App() {
       },
       "(send user text message)"
     );
+
+    downloadUserTextAsJSON(userText.trim());
+
     setUserText("");
+    console.log("conversación usuario:", userText);
 
     sendClientEvent({ type: "response.create" }, "trigger response");
   };
+
+  // const archivoJSON = () => {
+  //   downloadUserTextAsJSON(userText.trim());
+  // }
+
+  const downloadUserTextAsJSON = (userText:any) => {
+    const data = {
+      userText: userText,
+      timestamp: new Date().toISOString(),
+    };
+  
+    const json = JSON.stringify(data, null, 2); // Formato legible
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+  
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "userText.json";
+    a.click();
+  
+    URL.revokeObjectURL(url);
+  };
+  
 
   const handleTalkButtonDown = () => {
     if (sessionStatus !== "CONNECTED" || dataChannel?.readyState !== "open")
@@ -419,6 +456,8 @@ function App() {
           </div>
           <div>
             Realtime API <span className="text-gray-500">Agents</span>
+            <br></br>
+            {/* <button onClick={archivoJSON}>Hello world!</button> */}
           </div>
         </div>
         <div className="flex items-center">

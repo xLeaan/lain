@@ -61,6 +61,8 @@ function Transcript({
       await navigator.clipboard.writeText(transcriptRef.current.innerText);
       setJustCopied(true);
       setTimeout(() => setJustCopied(false), 1500);
+
+    
     } catch (error) {
       console.error("Failed to copy transcript:", error);
     }
