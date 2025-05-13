@@ -266,13 +266,13 @@ function App() {
     }
   };
 
-  const WebSocket = require('ws');
-  const ws = new WebSocket('ws://localhost:8888');
+  // const WebSocket = require('ws');
+  // const ws = new WebSocket('ws://localhost:8888');
 
-    // Conectar el WebSocket
-    ws.on('open', () => {
-      console.log('Conexión WebSocket abierta');
-    });
+  //   // Conectar el WebSocket
+  //   ws.on('open', () => {
+  //     console.log('Conexión WebSocket abierta');
+  //   });
 
   
 
