@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI();
+const messages: { role: string; text: string; timestamp: number }[] = [];
+
 
 async function generatePlaceSuggestion(userMessage: string) {
   const prompt = `The user said: "${userMessage}". Suggest a place that fits this mood. Respond in JSON with keys: name, description, location.`;

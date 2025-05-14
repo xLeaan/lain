@@ -301,6 +301,17 @@ function App() {
       { type: "response.cancel" },
       "(cancel due to user interruption)"
     );
+
+    fetch("http://localhost:5000/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: "assistant",
+        text: mostRecentAssistantMessage.title,
+        timestamp: Date.now(),
+      }),
+    });
+    
   };
 
   const handleSendTextMessage = () => {
@@ -325,6 +336,17 @@ function App() {
     console.log("conversación usuario:", userText);
 
     sendClientEvent({ type: "response.create" }, "trigger response");
+
+    fetch("http://localhost:5000/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: "user",
+        text: userText,
+        timestamp: Date.now(),
+      }),
+    });
+    
   };
 
   // const archivoJSON = () => {
