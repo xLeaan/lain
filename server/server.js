@@ -10,23 +10,30 @@ app.use(express.json());
 
 app.get('/messages', (req, res) => {
     res.json(messages);
+
+    if(res.statusCode === 200) {
+        console.log(`Messages retrieved: ${JSON.stringify(messages)}`);
+    }
 });
 
 app.post('/messages', (req, res) => {
-    const { role, text, timestamp } = req.body;
+    const { role, text } = req.body;
 
-    if (!role || !text || !timestamp) {
+    if (!role || !text) {
         return res.status(400).json({ error: 'All fields are required' });
     }
     
     const newMessage = {
         role,
-        text,
-        timestap
+        text
     };
 
     messages.push(newMessage);
     res.status(201).json(newMessage);
+
+    if(res.statusCode === 201) {
+        console.log(`New message added: ${JSON.stringify(newMessage)}`);
+    }
 });
 
 app.listen(PORT, () => {
