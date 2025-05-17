@@ -303,6 +303,23 @@ function App() {
     );
   };
 
+  useEffect(() => {
+    const lastItem = transcriptItems[transcriptItems.length - 1];
+    if (lastItem && lastItem.role === "assistant" && lastItem.status === "DONE") {
+      // Enviar mensaje a tu API
+      fetch("http://localhost:5000/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "IA",
+          text: lastItem.title,
+          timestamp: Date.now(),
+        }),
+      });
+    }
+  }, [transcriptItems]);
+  
+
   const handleSendTextMessage = () => {
     if (!userText.trim()) return;
     cancelAssistantSpeech();
@@ -319,12 +336,22 @@ function App() {
       "(send user text message)"
     );
 
-    downloadUserTextAsJSON(userText.trim());
+    // downloadUserTextAsJSON(userText.trim());
 
     setUserText("");
     console.log("conversación usuario:", userText);
 
     sendClientEvent({ type: "response.create" }, "trigger response");
+
+    fetch("http://localhost:5000/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: "user",
+        text: userText
+      }),
+    });
+    
   };
 
   // const archivoJSON = () => {
