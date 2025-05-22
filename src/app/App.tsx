@@ -266,15 +266,53 @@ function App() {
     }
   };
 
-  // const WebSocket = require('ws');
-  // const ws = new WebSocket('ws://localhost:8888');
+  async function generateAndSaveSummary() {
+  const res = await fetch("http://localhost:5000/messages");
+  const history = await res.json();
 
-  //   // Conectar el WebSocket
-  //   ws.on('open', () => {
-  //     console.log('Conexión WebSocket abierta');
-  //   });
+  const summaryRes = await fetch("https://api.openai.com/v1/realtime/sessions", {
+    method: "POST",
+    headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+    body: JSON.stringify({
+      model: "gpt-4o-realtime-preview-2024-12-17",
+      messages: [
+        { role: "system", content: "Resume la conversación en una sola frase clara y corta." },
+        ...history
+      ],
+      temperature: 0.5
+    })
+  });
 
-  
+  const data = await summaryRes.json();
+  const summaryText = data.choices?.[0]?.message?.content;
+
+  console.log("Resumen generado:", summaryText);
+  console.log("API KEY", process.env.NEXT_PUBLIC_OPENAI_API_KEY);
+
+  if (summaryText) {
+    await fetch("http://localhost:5000/summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: summaryText })
+    });
+
+    console.log("Resumen guardado:", summaryText);
+  } else {
+    console.warn("No se pudo generar el resumen");
+  }
+}
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    generateAndSaveSummary();
+  }, 10000);
+
+  return () => clearInterval(interval); 
+}, []);
+
 
   const cancelAssistantSpeech = async () => {
     const mostRecentAssistantMessage = [...transcriptItems]
@@ -302,22 +340,6 @@ function App() {
       "(cancel due to user interruption)"
     );
   };
-
-  useEffect(() => {
-    const lastItem = transcriptItems[transcriptItems.length - 1];
-    if (lastItem && lastItem.role === "assistant" && lastItem.status === "DONE") {
-      // Enviar mensaje a tu API
-      fetch("http://localhost:5000/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: "IA",
-          text: lastItem.title,
-          timestamp: Date.now(),
-        }),
-      });
-    }
-  }, [transcriptItems]);
   
 
   const handleSendTextMessage = () => {
@@ -351,31 +373,9 @@ function App() {
         text: userText
       }),
     });
-    
   };
 
-  // const archivoJSON = () => {
-  //   downloadUserTextAsJSON(userText.trim());
-  // }
 
-  const downloadUserTextAsJSON = (userText:any) => {
-    const data = {
-      userText: userText,
-      timestamp: new Date().toISOString(),
-    };
-  
-    const json = JSON.stringify(data, null, 2); // Formato legible
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-  
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "userText.json";
-    a.click();
-  
-    URL.revokeObjectURL(url);
-  };
-  
 
   const handleTalkButtonDown = () => {
     if (sessionStatus !== "CONNECTED" || dataChannel?.readyState !== "open")
