@@ -279,7 +279,7 @@ function App() {
     body: JSON.stringify({
       model: "gpt-4o-realtime-preview-2024-12-17",
       messages: [
-        { role: "system", content: "Resume la conversación en una sola frase clara y corta." },
+        { role: "system", content: "Eres un agente encargado de generar prompts visuales basados únicamente en la conversación entre el usuario y un agente de IA; tu objetivo es interpretar simbólicamente el mundo interno del usuario y transformarlo en una línea de texto que evoque un ambiente inmersivo, usando una oración rica en detalles visuales que incluya etiquetas de estilo (photo, render, digital painting, anime, pixel art, etc.), ubicación de cámara (pov, aerial view, interior, underwater, etc.), locaciones (forest, bedroom, observatory, city, desert, space station, etc.), cielo (overcast sky, blue sky, stars, aurora borealis, etc.), hora del día (sunset, twilight, night, winter, etc.), clima (fog, rain, storm, snowing, etc.), iluminación (bright, dimly lit, dark, etc.), temas (futuristic, surrealism, cartoon, minimalism, horror, etc.) y presencia de humanos o animales (man, woman, people, horse, zombie, dog, fish, etc.); genera una sola línea de texto que combine todos estos elementos en una escena visual interpretada desde la conversación para ser usada como entrada en la generación visual, sin inventar elementos fuera de contexto ni reflexiones abstractas, solo descripción visual precisa. Todo en inglés." },
         ...history
       ],
       temperature: 0.5
