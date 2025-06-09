@@ -51,6 +51,8 @@ function App() {
   const [isAudioPlaybackEnabled, setIsAudioPlaybackEnabled] =
     useState<boolean>(true);
 
+  const [messageCount, setMessageCount] = useState<Record<string, number>>({});
+
   const sendClientEvent = (eventObj: any, eventNameSuffix = "") => {
     if (dcRef.current && dcRef.current.readyState === "open") {
       logClientEvent(eventObj, eventNameSuffix);
@@ -200,27 +202,44 @@ function App() {
     logClientEvent({}, "disconnected");
   };
 
-  const sendSimulatedUserMessage = (text: string) => {
+  //ciclo de conversación 
+  const sendSimulatedUserMessage = (text: string) => { 
+     //  1. Generar un ID único para el mensaje del usuario
     const id = uuidv4().slice(0, 32);
-    addTranscriptMessage(id, "user", text, true);
+    //incrementa el contador solo si el agente activo el LAIN
+if (selectedAgentName === "Lain") {
+    incrementMessageCount("Lain");
+  }
+     //  2. AGREGAR el mensaje del usuario al transcript visual (pantalla de la conversación)
+    addTranscriptMessage(id, "user", text, true); 
 
+  //  3. ENVIAR el mensaje del usuario al sistema (agente Lain u otro agente)
     sendClientEvent(
       {
-        type: "conversation.item.create",
+        type: "conversation.item.create", // Esto indica que el usuario ha creado un nuevo mensaje
         item: {
-          id,
-          type: "message",
-          role: "user",
-          content: [{ type: "input_text", text }],
+          id, // ID único del mensaje
+          type: "message", // Tipo de contenido: mensaje
+          role: "user", // El rol es "usuario"
+          content: [{ type: "input_text", text }], // Contenido real del mensaje enviado
         },
       },
-      "(simulated user text message)"
+      "(simulated user text message)" // Sufijo para registro interno de eventos
     );
+    // 4. SOLICITAR al agente una respuesta basada en ese mensaje
     sendClientEvent(
       { type: "response.create" },
       "(trigger response after simulated user text message)"
     );
   };
+
+const incrementMessageCount = (agentName: string) => {
+  setMessageCount((prev) => ({
+    ...prev,
+    [agentName]: (prev[agentName] || 0) + 1,
+  }));
+};
+
 
   const updateSession = (shouldTriggerResponse: boolean = false) => {
     sendClientEvent(
