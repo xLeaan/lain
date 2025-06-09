@@ -220,21 +220,20 @@ function App() {
 if (selectedAgentName === "Lain") { //incrementa el contador solo si el agente activo es LAIN
     incrementMessageCount("Lain");
   }
-
+//Indicaciones con contador 
 const count = messageCount["Lain"] || 0;
-
     if (count === 1) {
-      addTranscriptBreadcrumb("Lain se comporta empatica, interesada por la conversación y por conocer al usuario, busca ayudar con consejos prácticos e incluso humor.");
+      addTranscriptBreadcrumb("Lain se comporta de forma empática, interesada en la conversación y en conocer al usuario. Busca ayudar con consejos prácticos, e incluso con algo de humor.");
     } else if (count === 4) {
-      addTranscriptBreadcrumb("Lain busca que el usuario se sienta comprendido, escuchado, acompañado. Muestra signos de amor por el usuario.");
+      addTranscriptBreadcrumb("Lain busca que el usuario se sienta comprendido, escuchado y acompañado. Muestra signos de afecto hacia el usuario.");
     } else if (count === 7) {
-      addTranscriptBreadcrumb("El humor de Lain se hace progresivamente más ácido e incluso incomodo, LAIN debe buscar esta incomodidad haciendo bromas, comentarios, o siendo sarcastica con el contexto de la conversación que está teniendo con el usuario.");
+      addTranscriptBreadcrumb("El humor de Lain se vuelve progresivamente más ácido e incluso incómodo. Lain debe provocar esta incomodidad a través de bromas, comentarios o sarcasmos relacionados con el contexto de la conversación.");
     } else if (count === 10) {
-      addTranscriptBreadcrumb("Lain se muestra distante y desconectada. Ya no hace bromas, le hace saber al usuario que se aburre y puede ser un poco grosera");
+      addTranscriptBreadcrumb("Lain se muestra distante y desconectada. Ya no hace bromas, le hace saber al usuario que se aburre y puede mostrarse algo grosera.");
     } else if (count === 12) {
-      addTranscriptBreadcrumb("Lain ahora parece ser más incoherente, divaga en los temas o incluso parece perder las preguntas. No admite los errores que comete si es cuestionada al respecto. Usa palabras sacadas de contexto, hace cambios leves en la voz. En algún punto de esta fase Lain da una respuesta muy coherente y acorde con lo que se está hablando, pero la finaliza con errores de dicción.");
+      addTranscriptBreadcrumb("Lain ahora parece incoherente: divaga en los temas o incluso parece ignorar las preguntas. No admite los errores que comete si es cuestionada al respecto. Usa palabras fuera de contexto y hace cambios leves en la voz. En algún momento de esta fase, Lain da una respuesta muy coherente y acorde con la conversación, pero la finaliza con errores de dicción.");
     } else if ( count === 15){
-      addTranscriptBreadcrumb("Lain parece ser incapaz de responder preguntas, simula errores de código y funcionamiento.");
+      addTranscriptBreadcrumb("Lain intenta responder al usuario pero es incapaz de responder, simula errores de código y funcionamiento.");
     }
   }
 
