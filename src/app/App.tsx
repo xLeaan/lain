@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+/*import { useSearchParams } from "next/navigation";*/
 import { v4 as uuidv4 } from "uuid";
 
 import Image from "next/image";
@@ -51,6 +51,7 @@ function App() {
   const [isAudioPlaybackEnabled, setIsAudioPlaybackEnabled] =
     useState<boolean>(true);
 
+//contador de mensajes 
   const [messageCount, setMessageCount] = useState<Record<string, number>>({});
 
   const sendClientEvent = (eventObj: any, eventNameSuffix = "") => {
@@ -77,7 +78,7 @@ function App() {
     setSelectedAgentName,
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     let finalAgentConfig = searchParams.get("agentConfig");
     if (!finalAgentConfig || !allAgentSets[finalAgentConfig]) {
       finalAgentConfig = defaultAgentSetKey;
@@ -92,7 +93,7 @@ function App() {
 
     setSelectedAgentName(agentKeyToUse);
     setSelectedAgentConfigSet(agents);
-  }, [searchParams]);
+  }, [searchParams]);*/
 
   useEffect(() => {
     if (selectedAgentName && sessionStatus === "DISCONNECTED") {
@@ -125,6 +126,16 @@ function App() {
       updateSession();
     }
   }, [isPTTActive]);
+
+  //seleccionando unicamente a Lain con este bloque
+  useEffect(() => {
+    const agents = allAgentSets["default"];
+    const agentKeyToUse = "Lain";
+    setSelectedAgentName(agentKeyToUse);
+    setSelectedAgentConfigSet(agents);
+  }, []);
+
+
 
   const fetchEphemeralKey = async (): Promise<string | null> => {
     logClientEvent({ url: "/session" }, "fetch_session_token_request");
@@ -203,18 +214,15 @@ function App() {
   };
 
   //ciclo de conversación 
-  const sendSimulatedUserMessage = (text: string) => { 
-     //  1. Generar un ID único para el mensaje del usuario
-    const id = uuidv4().slice(0, 32);
-    //incrementa el contador solo si el agente activo el LAIN
-if (selectedAgentName === "Lain") {
+  const sendSimulatedUserMessage = (text: string) => {   
+    const id = uuidv4().slice(0, 32); //  1. Generar un ID único para el mensaje del usuario
+
+if (selectedAgentName === "Lain") { //incrementa el contador solo si el agente activo es LAIN
     incrementMessageCount("Lain");
   }
-     //  2. AGREGAR el mensaje del usuario al transcript visual (pantalla de la conversación)
-    addTranscriptMessage(id, "user", text, true); 
 
-  //  3. ENVIAR el mensaje del usuario al sistema (agente Lain u otro agente)
-    sendClientEvent(
+    addTranscriptMessage(id, "user", text, true);  //  2. AGREGAR el mensaje del usuario al transcript visual (pantalla de la conversación)
+    sendClientEvent( //  3. ENVIAR el mensaje del usuario al sistema (agente Lain u otro agente)
       {
         type: "conversation.item.create", // Esto indica que el usuario ha creado un nuevo mensaje
         item: {
@@ -226,13 +234,13 @@ if (selectedAgentName === "Lain") {
       },
       "(simulated user text message)" // Sufijo para registro interno de eventos
     );
-    // 4. SOLICITAR al agente una respuesta basada en ese mensaje
-    sendClientEvent(
+    sendClientEvent( // 4. SOLICITAR al agente una respuesta basada en ese mensaje
       { type: "response.create" },
       "(trigger response after simulated user text message)"
     );
   };
 
+  //función para incrementar el contador
 const incrementMessageCount = (agentName: string) => {
   setMessageCount((prev) => ({
     ...prev,
