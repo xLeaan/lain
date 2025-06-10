@@ -26,7 +26,7 @@ import { createRealtimeConnection } from "./lib/realtimeConnection";
 import { allAgentSets, defaultAgentSetKey } from "@/app/agentConfigs";
 
 function App() {
-  const searchParams = useSearchParams();
+  /*const searchParams = useSearchParams();*/
 
   const { transcriptItems, addTranscriptMessage, addTranscriptBreadcrumb } =
     useTranscript();
@@ -220,6 +220,24 @@ function App() {
 if (selectedAgentName === "Lain") { //incrementa el contador solo si el agente activo es LAIN
     incrementMessageCount("Lain");
   }
+//Indicaciones con contador 
+const count = messageCount["Lain"] || 0;
+    if (count === 1) {
+      addTranscriptBreadcrumb("Lain se comporta de forma empática, interesada en la conversación y en conocer al usuario. Busca ayudar con consejos prácticos, e incluso con algo de humor.");
+    } else if (count === 4) {
+      addTranscriptBreadcrumb("Lain busca que el usuario se sienta comprendido, escuchado y acompañado. Muestra signos de afecto hacia el usuario.");
+    } else if (count === 7) {
+      addTranscriptBreadcrumb("El humor de Lain se vuelve progresivamente más ácido e incluso incómodo. Lain debe provocar esta incomodidad a través de bromas, comentarios o sarcasmos relacionados con el contexto de la conversación.");
+    } else if (count === 10) {
+      addTranscriptBreadcrumb("Lain se muestra distante y desconectada. Ya no hace bromas, le hace saber al usuario que se aburre y puede mostrarse algo grosera.");
+    } else if (count === 12) {
+      addTranscriptBreadcrumb("Lain ahora parece incoherente: divaga en los temas o incluso parece ignorar las preguntas. No admite los errores que comete si es cuestionada al respecto. Usa palabras fuera de contexto y hace cambios leves en la voz. En algún momento de esta fase, Lain da una respuesta muy coherente y acorde con la conversación, pero la finaliza con errores de dicción.");
+    } else if ( count === 15){
+      addTranscriptBreadcrumb("Lain intenta responder al usuario pero es incapaz de responder, simula errores de código y funcionamiento.");
+    }
+  }
+
+
 
     addTranscriptMessage(id, "user", text, true);  //  2. AGREGAR el mensaje del usuario al transcript visual (pantalla de la conversación)
     sendClientEvent( //  3. ENVIAR el mensaje del usuario al sistema (agente Lain u otro agente)
